@@ -2,4 +2,6 @@
 
 # WITH JWT
 
-# DEVELOPPER lEGA
+# Developer Name: Lega Roland
+
+# Email: legaroland@gmail.com Contact: +225 07 79 22 86 00
