@@ -1,8 +1,10 @@
 ﻿using JwtAuthAspNet.core.DBContext.Dto;
 using JwtAuthAspNet.core.OtherObjects;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
@@ -69,7 +71,7 @@ namespace JwtAuthAspNet.Controllers
                 }
                 return BadRequest(errorString);
             }
-            await  _userManager.AddToRoleAsync(newUser,StaticUserRoles.USER);
+            await  _userManager.AddToRoleAsync(newUser,StaticUserRoles.OWNER);
             return Ok("User created successfully");
 
         }
@@ -101,10 +103,13 @@ namespace JwtAuthAspNet.Controllers
                 authClaims.Add(new Claim(ClaimTypes.Role, item));
             }
 
-            var token = GenerateNewJsonWebToken(authClaims); ;
+            var token = GenerateNewJsonWebToken(authClaims);
+
+            //var res = [token,user];
             return Ok(token);
         }
 
+        //fonction pour generer le token
         private string GenerateNewJsonWebToken(List<Claim> claims)
         {
             var authSecret = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["JWT:Secret"]));
@@ -122,5 +127,20 @@ namespace JwtAuthAspNet.Controllers
         }
 
 
+        //Route pour le Login 
+        [HttpGet]
+        [Route("list-user")]
+        [Authorize(Roles = StaticUserRoles.ADMIN + "," + StaticUserRoles.OWNER)]
+
+        public async Task<IActionResult> ListUser()
+        {
+            var users = await _userManager.Users.ToListAsync(); // Récupère la liste des utilisateurs
+
+            // Convertir la liste des utilisateurs en JSON
+          //  var json = JsonConvert.SerializeObject(users);
+
+            return Ok(users);
+            //return Content(json, "application/json");
+        }
     }
 }

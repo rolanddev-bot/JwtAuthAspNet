@@ -1,7 +1,9 @@
-# ASP.nET VERSION 8
+# ASP.Net version 8
 
-# WITH JWT
+# make a restfull Api in ASP.NET with jwt
 
 # Developer Name: Lega Roland
 
-# Email: legaroland@gmail.com Contact: +225 07 79 22 86 00
+# Email: legaroland@gmail.com
+
+# Contact: +225 07 79 22 86 00
