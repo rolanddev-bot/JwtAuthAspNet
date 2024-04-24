@@ -18,7 +18,7 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-//Ajouter notre base de donnée
+//Ajouter notre base de donnï¿½e
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
 {
     var connectinString = builder.Configuration.GetConnectionString("local");
@@ -42,6 +42,7 @@ builder.Services.Configure<IdentityOptions>(options =>
     options.Password.RequireNonAlphanumeric = false;
     options.SignIn.RequireConfirmedEmail = false;
 });
+
 //Add authentication and JwtBear
 builder.Services.AddAuthentication(options =>
 {
