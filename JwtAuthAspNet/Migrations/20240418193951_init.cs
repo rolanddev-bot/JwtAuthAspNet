@@ -43,7 +43,9 @@ namespace JwtAuthAspNet.Migrations
                     TwoFactorEnabled = table.Column<bool>(type: "bit", nullable: false),
                     LockoutEnd = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: true),
                     LockoutEnabled = table.Column<bool>(type: "bit", nullable: false),
-                    AccessFailedCount = table.Column<int>(type: "int", nullable: false)
+                    AccessFailedCount = table.Column<int>(type: "int", nullable: false),
+                    LastName = table.Column<int>(type: "nvarchar(50)", nullable: false),
+                    FirstName = table.Column<int>(type: "nvarchar(50)", nullable: false)
                 },
                 constraints: table =>
                 {

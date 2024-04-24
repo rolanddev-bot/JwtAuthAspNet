@@ -1,4 +1,5 @@
 ﻿using JwtAuthAspNet.core.DBContext.Dto;
+using JwtAuthAspNet.core.DBContext.entities;
 using JwtAuthAspNet.core.OtherObjects;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -16,11 +17,11 @@ namespace JwtAuthAspNet.Controllers
     [ApiController]
     public class AuthController : ControllerBase
     {
-        private readonly UserManager<IdentityUser> _userManager;
+        private readonly UserManager<ApplicationUser> _userManager;
         private readonly RoleManager<IdentityRole> _roleManager;
         private readonly IConfiguration _configuration;
 
-        public AuthController(UserManager<IdentityUser> userManager, RoleManager<IdentityRole> roleManager, IConfiguration configuration)
+        public AuthController(UserManager<ApplicationUser> userManager, RoleManager<IdentityRole> roleManager, IConfiguration configuration)
         {
             _userManager = userManager;
             _roleManager = roleManager;
@@ -54,9 +55,11 @@ namespace JwtAuthAspNet.Controllers
             var isExistsUser= await _userManager.FindByNameAsync(registerDto.UserName);
             if (isExistsUser != null)
                 return BadRequest("Username Aleady Exists !");
-            IdentityUser newUser = new IdentityUser()
+            ApplicationUser newUser = new ApplicationUser()
             {
                 Email = registerDto.Email,
+                LastName = registerDto.LastName,
+                FirstName = registerDto.FirstName,
                 UserName = registerDto.UserName,
                 SecurityStamp = Guid.NewGuid().ToString(),
             };
@@ -71,7 +74,7 @@ namespace JwtAuthAspNet.Controllers
                 }
                 return BadRequest(errorString);
             }
-            await  _userManager.AddToRoleAsync(newUser,StaticUserRoles.OWNER);
+            await  _userManager.AddToRoleAsync(newUser,StaticUserRoles.USER);
             return Ok("User created successfully");
 
         }
@@ -95,7 +98,9 @@ namespace JwtAuthAspNet.Controllers
             {
                 new Claim(ClaimTypes.Name,user.UserName),
                 new Claim(ClaimTypes.NameIdentifier,user.Id),
-                new Claim("JWT",Guid.NewGuid().ToString())
+                new Claim("JWT",Guid.NewGuid().ToString()),
+                new Claim("Firstname",user.FirstName),
+                new Claim("Lastname",user.LastName)
             };
 
             foreach (var item in userRoles)
@@ -141,6 +146,72 @@ namespace JwtAuthAspNet.Controllers
 
             return Ok(users);
             //return Content(json, "application/json");
+        }
+
+
+        //create user has role OWNER
+        [HttpPost]
+        [Route("make-owner")]
+        public async Task<IActionResult> makeOwner([FromBody] RegisterDto registerDto)
+        {
+            var isExistsUser = await _userManager.FindByNameAsync(registerDto.UserName);
+            if (isExistsUser != null)
+                return BadRequest("Username Aleady Exists !");
+            ApplicationUser newUser = new ApplicationUser()
+            {
+                Email = registerDto.Email,
+                UserName = registerDto.UserName,
+                LastName = registerDto.LastName,
+                FirstName = registerDto.FirstName,
+                SecurityStamp = Guid.NewGuid().ToString(),
+            };
+
+            var createUserResult = await _userManager.CreateAsync(newUser, registerDto.Password);
+            if (!createUserResult.Succeeded)
+            {
+                var errorString = "Username creation failed";
+                foreach (var error in createUserResult.Errors)
+                {
+                    errorString += "#" + error.Description;
+                }
+                return BadRequest(errorString);
+            }
+            await _userManager.AddToRoleAsync(newUser, StaticUserRoles.OWNER);
+            return Ok("User created successfully");
+
+        }
+
+        //create user has role ADMIN
+
+        [HttpPost]
+        [Route("make-admin")]
+        public async Task<IActionResult> makeAdmin([FromBody] RegisterDto registerDto)
+        {
+            var isExistsUser = await _userManager.FindByNameAsync(registerDto.UserName);
+            if (isExistsUser != null)
+                return BadRequest("Username Aleady Exists !");
+            ApplicationUser newUser = new ApplicationUser()
+            {
+                Email = registerDto.Email,
+                UserName = registerDto.UserName,
+                LastName = registerDto.LastName,
+                FirstName = registerDto.FirstName,
+                SecurityStamp = Guid.NewGuid().ToString(),
+            };
+
+            var createUserResult = await _userManager.CreateAsync(newUser, registerDto.Password);
+            if (!createUserResult.Succeeded)
+            {
+                var errorString = "Username creation failed";
+                foreach (var error in createUserResult.Errors)
+                {
+                    errorString += "#" + error.Description;
+                }
+                return BadRequest(errorString);
+            }
+            await _userManager.AddToRoleAsync(newUser, StaticUserRoles.ADMIN);
+            return Ok("User created successfully");
+
         }
     }
 }

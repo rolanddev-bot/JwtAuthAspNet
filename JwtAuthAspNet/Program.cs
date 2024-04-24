@@ -7,6 +7,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 
 using System.Text;
+using JwtAuthAspNet.core.DBContext.entities;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -26,7 +27,7 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 
 //add Identity
 builder.Services.
-    AddIdentity<IdentityUser, IdentityRole>()
+    AddIdentity<ApplicationUser, IdentityRole>()
     .AddEntityFrameworkStores<ApplicationDbContext>()
     .AddDefaultTokenProviders();
 
