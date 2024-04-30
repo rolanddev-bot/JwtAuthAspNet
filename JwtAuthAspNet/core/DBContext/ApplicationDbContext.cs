@@ -1,6 +1,6 @@
 ﻿namespace JwtAuthAspNet.core.DBContext;
 
-using JwtAuthAspNet.core.DBContext.entities;
+using JwtAuthAspNet.core.Entities;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 

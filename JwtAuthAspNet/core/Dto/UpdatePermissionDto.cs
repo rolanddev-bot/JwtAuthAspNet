@@ -1,8 +1,8 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace JwtAuthAspNet.core.DBContext.Dto
+namespace JwtAuthAspNet.core.Dto
 {
-    public class updatePermissionDto
+    public class UpdatePermissionDto
     {
         [Required(ErrorMessage = "Username is required")]
         public string UserName { get; set; }

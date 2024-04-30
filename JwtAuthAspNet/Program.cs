@@ -7,7 +7,9 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 
 using System.Text;
-using JwtAuthAspNet.core.DBContext.entities;
+using JwtAuthAspNet.core.Entities;
+using JwtAuthAspNet.core.Interfaces;
+using JwtAuthAspNet.core.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -64,6 +66,9 @@ builder.Services.AddAuthentication(options =>
             IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["JWT:Secret"]))
         };
     });
+
+//injection de dependance (dependency injection)
+builder.Services.AddScoped<IAuthService, AuthService>();
 
 
 

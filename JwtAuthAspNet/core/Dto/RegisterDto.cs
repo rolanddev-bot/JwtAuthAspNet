@@ -1,10 +1,10 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace JwtAuthAspNet.core.DBContext.Dto
+namespace JwtAuthAspNet.core.Dto
 {
     public class RegisterDto
     {
-        [Required(ErrorMessage="Username is required")]
+        [Required(ErrorMessage = "Username is required")]
         public string UserName { get; set; }
 
         [Required(ErrorMessage = "FirstName is required")]
